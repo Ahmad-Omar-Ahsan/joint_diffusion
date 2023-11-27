@@ -1,4 +1,5 @@
 import os
+import csv 
 
 import torchvision
 from torchvision import transforms
@@ -634,3 +635,25 @@ def Birds(dataroot, skip_normalization=False, train_aug=False, image_size=64):
         fast_birds = FastDataset(data[0], data[1], dataset.number_classes)
         torch.save(fast_birds, save_path)
     return fast_birds, fast_birds, image_size, 3
+
+
+def APTOS_2019(dataroot, skip_normalization=False, train_aug=False):
+    train_dataset_dir = os.path.join(dataroot, "train_images/")
+    
+    # Read the CSV file using csv module
+    with open(os.path.join(dataroot, 'train.csv'), 'r') as csvfile:
+        csvreader = csv.DictReader(csvfile)
+        data = list(csvreader)
+    
+    # Modify the 'id_code' column in the data
+    for row in data:
+        row['id_code'] = os.path.join(train_dataset_dir, row['id_code'] + '.png')
+    
+    # Extract class labels and file paths
+    train_classes = [int(row['diagnosis']) for row in data]
+    train_files = [row['id_code'] for row in data]
+    
+    resolution = 224
+    train_dataset = ImageDataset(image_paths=train_files, resolution=resolution, classes=train_classes)
+
+    return train_dataset, None, resolution, 3
