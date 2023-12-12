@@ -637,7 +637,7 @@ def Birds(dataroot, skip_normalization=False, train_aug=False, image_size=64):
     return fast_birds, fast_birds, image_size, 3
 
 
-def APTOS_2019(dataroot, skip_normalization=False, train_aug=False):
+def APTOS_2019(dataroot, skip_normalization=False, train_aug=False, resolution=256):
     train_dataset_dir = os.path.join(dataroot, "train_images/")
     
     # Read the CSV file using csv module
@@ -653,7 +653,6 @@ def APTOS_2019(dataroot, skip_normalization=False, train_aug=False):
     train_classes = [int(row['diagnosis']) for row in data]
     train_files = [row['id_code'] for row in data]
     
-    resolution = 224
     train_dataset = ImageDataset(image_paths=train_files, resolution=resolution, classes=train_classes)
 
     return train_dataset, None, resolution, 3
